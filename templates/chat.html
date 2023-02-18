@@ -1,0 +1,347 @@
+ {% extends "_base.html" %}
+{% load static %}
+{% load thumbnail %}
+{% load user_actions %}
+{% block head_title %}Your DMs{% endblock %}
+{% block content  %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}"> 
+<style type="text/css">
+  .active_chat{
+    background-color: rgba(194, 192, 192, 0.27) !important;
+  }
+</style>
+<center>  
+  <br>
+{% if not request.user.get_social_user.get_user_rooms %}
+       <div class="card ml-3 text-center">
+         <div class="card-body">
+            <h5 class="card-title">Start Chatting with Your friends privately</h5>
+            <hr>
+            <p class="card-text">
+                If you follow some user and user also follows you then only you can chat with each other
+            </p>
+            <hr>
+            <p class="text-center">
+               <a href="{% url 'users:home_page' %}">
+               <button type="button" class="btn btn-success">
+               <i class="fas fa-house-damage"></i>
+               Start Following</button>
+               </a>
+            </p>
+         </div>
+      </div>
+{% else %}
+
+      
+  <h3 class=" text-center">Your DMs</h3>
+   <div class="row col-12 col-md-9 p-0" style="max-width: 100%;">
+      <div class="inbox-dropdown col-12 dropdown d-flex d-md-none mt-5 mb-2">
+         <button type="button" class="btn col-12 col-sm-4 dropdown-toggle float-right" data-toggle="dropdown" style="background-color: #0095f6; color:#fff;">
+         Inbox
+         </button>
+         <div class="dropdown-menu col-12">
+            <ul class="p-0 mt-2" type="none" id='mobile_view'>
+              {% for room in request.user.get_social_user.get_user_rooms %}
+                       {% with other_user=user.id|get_other_username_tt:room.str_id %}
+                           <li class="inbox m-0 position-relative " room_id="{{room.str_id}}" id='person_chat' style="border-bottom:2px solid #dfdfdf;cursor: pointer;">
+                              <div class="media ">
+                                 <div class="media-left">
+                                    <img class="rounded-circle" id="inbox-pic" src="{% thumbnail other_user.get_social_user.profile_photo 200x200 crop %}" style="width: 56px;">
+                                 </div>
+                                 <div class="media-body ">
+                                    <p class="media-heading ">
+                                    </p>
+                                    <p class="m-0" style="font-size: 110%; font-weight: 500;"> {{other_user.username|slice:":15" }}
+
+                                    <span class="text-muted text-right "  style="font-size:50%" id='{{room.str_id}}chat_date'>{{room.last_message.timestamp}}</span>
+                                    </p>
+                                    <span class='text-muted' id='{{room.str_id}}last_message'>
+                                      {{room.last_message.content|truncatechars:10}}
+                                  </span>
+                                 </div>
+                                {% if user.id|unread_counter:room.str_id %}
+                                      <span class="badge bg-info float-right" id='{{room.str_id}}message_counter' style="font-size:120%;color:white;">
+                                        {{user.id|unread_counter:room.str_id}}
+                                {% else %}
+                                  <span class="badge bg-info float-right not-visable" id='{{room.str_id}}message_counter' style="font-size:120%;color:white;">
+                                {% endif %}
+                                </span>
+                              </div>
+                           </li>
+                      {% endwith %}
+                  
+              {% endfor %}
+     
+            </ul>
+         </div>
+      </div>
+      <div class="inbox-list card d-none d-md-flex col-md-4 p-0 rounded-0 border-right-0">
+         <div class="card-header p-3 text-center">
+            <b>{{request.user.username}}</b>
+         </div>
+         <div class="card-body m-0 overflow-auto" style="height: 75vh;">
+            <ul class="p-0 mt-2" type="none" id='dexstop_view'>
+              {% for room in request.user.get_social_user.get_user_rooms %}
+                       {% with other_user=user.id|get_other_username_tt:room.str_id %}
+                           <li class="inbox m-0 position-relative " room_id="{{room.str_id}}" id='person_chat' style="border-bottom:2px solid #dfdfdf;">
+                              <div class="media ">
+                                 <div class="media-left">
+                                    <img class="rounded-circle" id="inbox-pic" src="{% thumbnail other_user.get_social_user.profile_photo 200x200 crop %}" style="width: 56px;">
+                                 </div>
+                                 <div class="media-body ">
+                                    <p class="media-heading ">
+                                    </p>
+                                    <p class="m-0" style="font-size: 110%; font-weight: 500;"> {{other_user.username|slice:":15" }}
+
+                                    <span class="text-muted text-right "  style="font-size:50%" id='{{room.str_id}}chat_date'>{{room.last_message.timestamp}}</span>
+                                    </p>
+                                    <span class='text-muted' id='{{room.str_id}}last_message'>
+                                      {{room.last_message.content|truncatechars:10}}
+                                  </span>
+                                 </div>
+                                {% if user.id|unread_counter:room.str_id %}
+                                      <span class="badge bg-info float-right" id='{{room.str_id}}message_counter' style="font-size:120%;color:white;">
+                                        {{user.id|unread_counter:room.str_id}}
+                                {% else %}
+                                  <span class="badge bg-info float-right not-visable" id='{{room.str_id}}message_counter' style="font-size:120%;color:white;">
+                                {% endif %}
+                                </span>
+                              </div>
+                           </li>
+                      {% endwith %}
+              {% empty %}
+                  
+               
+              {% endfor %}
+
+            </ul>
+         </div>
+      </div>
+      <div class="card col-12 col-md-7 p-0 rounded-0 justify-content-center " id="inbox-detail" style="height: 70hv;">
+         <div class="card-header pb-0 rounded-0 border-bottom">
+            <div style="margin-bottom: 1.08rem;">
+               <b> Massages  </b>
+            </div>
+         </div>
+         <div class="card-body border-top-0 m-0 justify-content-end" style="margin-bottom:-4% !important;">
+            <div class="message-section msg_history" id="chat-log"  style="height:64vh; overflow:auto;">
+            </div>
+
+<div class="input-group mb-3">
+  {% csrf_token %}
+  <input type="text" class="form-control"  placeholder="Message..." maxlength="250" minlength="1" id="chat-message-input">
+  <div class="input-group-append " style="cursor:pointer">
+    <button class="input-group-text" id="message_submit_button">Send</button>
+  </div>
+</div>
+
+
+         </div>
+      </div>
+   </div>
+   </div>
+</center>
+
+{% endif %}
+
+
+{% endblock content %}
+
+{% block js_script  %}
+<script>
+
+  var mobile_view=document.querySelector('#mobile_view')
+  var dexstop_view=document.querySelector('#dexstop_view')
+    function changeUi(x) {
+      if (x.matches) { 
+
+         mobile_view.innerHTML=dexstop_view.innerHTML;
+         dexstop_view.innerHTML='';
+
+      } else {
+        //dexstop view
+
+          dexstop_view.innerHTML=mobile_view.innerHTML;
+         mobile_view.innerHTML='';
+
+      }
+    }
+    var x = window.matchMedia("(max-width: 768px)")
+    changeUi(x) 
+
+    x.addListener(changeUi) 
+
+
+
+
+      function clear_active_class () {
+        document.querySelectorAll('#person_chat').forEach((item) =>
+           item.classList.remove('active_chat')
+             );
+      };
+      var username = '{{ username }}';
+        window.page_number=1;
+
+
+          chatSocket.onopen = function () {
+              console.log("Connected to chat socket");
+              document.querySelectorAll('#person_chat').forEach((item) =>
+                  item.addEventListener("click", (event) => {
+                    clear_active_class();
+                    item.classList.add('active_chat');
+                      chatSocket.send(JSON.stringify({
+                        'room_id': item.getAttribute('room_id'),
+                        'command':'messages_of_that_room',
+                        'previous_room':window.current_room
+                       
+                    }));
+                  })
+              );
+              document.querySelector('#person_chat').click();
+          };
+          var msg_history=document.querySelector('.msg_history');
+          msg_history.addEventListener('scroll',(event)=>{
+            if (msg_history.scrollTop ===0) {
+              
+              chatSocket.send(JSON.stringify({
+                'room_id': window.current_room,
+                'command':'messages_of_that_room_scroll',
+                'page_no':window.page_number
+               }));
+            }
+          });
+
+         chatSocket.onmessage = function(e) {
+              var data = JSON.parse(e.data);
+              
+              if (data.command === "room_message") {
+               window.current_room=data.room_id
+               window.page_number=1;
+              document.querySelector('#chat-log').innerHTML=''
+                for (let i=0; i<data['messages'].length; i++) {
+                  createMessage(data['messages'][i]);
+                }
+              document.querySelector('#chat-message-input').focus();
+                clear_unseen_badge(data.room_id)
+                window.page_number =2;
+          }else if (data.command === 'room_message_add') {
+                for (let i=0; i<data['messages'].length; i++) {
+                  createMessage(data['messages'][i],true);
+                }
+              window.page_number +=1;
+            
+          }else if (data.command === 'room_message_na') {
+            
+          }
+          else if (data.command === 'new_message_save_db') {
+            if (data.room_id === window.current_room) {
+              createMessage(data.message)
+            }else{
+              console.warn('new massage from Other  room',data)
+              document.getElementById(data.room_id+'last_message').innerHTML=data.message.content
+              if (data.message_counter >0) {
+                set_unseen_badge(data.room_id,data.message_counter)
+              }
+            }
+          }
+          else if (data.command === 'new_notification') {
+               async function start(head,body,id) {
+                    var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+                    const res = await fetch(window.location.origin +"/send_push/",
+                    {
+                     method: 'POST',
+                     body: JSON.stringify({head, body, id,}),
+                     headers: {
+                         'content-type': 'application/json',
+                         'X-CSRFToken':csrftoken
+                     }
+                 });
+                 if (res.status === 200) {
+                   console.log('notification sended')
+               
+                 } else {
+                   console.error('sth when wrong with notification')
+                     
+                 }
+               };
+           var head=data.value.title;
+           var body=data.value.description ;
+           var id='{{user.id}}' ;
+           start(head,body,id);
+            
+          }
+
+
+
+        };
+
+        document.querySelector('#message_submit_button').onclick = function(e) {
+              e.preventDefault();
+              var messageInputDom = document.querySelector('#chat-message-input');
+              var message = messageInputDom.value;
+              if (message.trim()) {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'command':'new_message',
+                    'room_id':window.current_room,
+                }));
+                messageInputDom.value = '';
+               }
+          };
+
+
+        function createMessage(data,add=false) {
+              var message = data.content;
+                var author = data.author;
+                var timestamp = data.timestamp;
+
+                if (username === author) {
+                  var msg_text=  ` 
+                  <div class="outgoing_msg">
+                    <div class="sent_msg">
+                      <p>${message}</p>
+                      <span class="time_date">${timestamp}</span> </div>
+                  </div>`;
+
+                }else{
+                  var msg_text=` 
+                  <div class="incoming_msg">
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>${message}</p>
+                      <span class="time_date">${timestamp}</span> </div>
+                  </div>
+                </div>` 
+                }
+                var chat_log=document.querySelector('#chat-log');
+                var msg_history=document.querySelector('.msg_history');
+                if (add) {
+                    chat_log.innerHTML = msg_text+chat_log.innerHTML;
+                    msg_history.scrollTop=30;
+                }else{
+                document.getElementById(window.current_room+'chat_date').innerHTML=timestamp;
+                document.getElementById(window.current_room+'last_message').innerHTML=message.slice(0, 10);
+                chat_log.innerHTML += msg_text;
+                msg_history.scrollTop=msg_history.scrollHeight;
+              }
+           };
+
+        function clear_unseen_badge (room_id) {
+          var badge=document.getElementById(room_id+'message_counter');
+          badge.classList.add('not-visable');
+          
+        }
+        function set_unseen_badge (room_id,num) {
+          var badge=document.getElementById(room_id+'message_counter');
+          badge.classList.remove('not-visable');
+          badge.innerHTML=num
+
+        }
+         chatSocket.onclose = function(e) {
+              console.error('Chat socket closed unexpectedly');
+          };
+
+    </script>
+
+      {% endblock js_script %}
+

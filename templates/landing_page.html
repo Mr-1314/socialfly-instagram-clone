@@ -1,0 +1,107 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block head_title %}Welcome to Socialfly{% endblock %}
+{% block content  %}
+<section class="view intro-2 rgba-gradient">
+      <div class="mask">
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+          <div class="row flex-center pt-5 mt-3">
+            <div class="col-md-12 col-lg-6 text-center text-md-left margins">
+              <div class="white-text">
+                <h1 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">
+                   Socialfly<hr><span class="text-muted text-sm-left">An Instagram  clone</span>
+                </h1>
+                <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                <h6 class="wow fadeInLeft" data-wow-delay="0.3s">
+                  Socialfly is an instagram clone a project that i make with django
+                   (a python web framework) and with django channels with notification and other PWA services included
+                </h6>
+                <br>
+                <a href="https://github.com/Abhishek-Gawade-programmer/socialfly-instagram-clone" class="btn btn-white text-primary btn-rounded blue-text font-weight-bold ml-lg-0 wow fadeInLeft"
+                  data-wow-delay="0.3s">Visit Github For Code <i class="fab fa-github"></i></a>
+
+                <a href="{% url 'posts:explore' %}" class="btn btn-outline-white text-danger btn-rounded font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">
+                  Signup And Start Exploring <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6  wow fadeInRight" data-wow-delay="0.3s">
+              
+              <img src="{% static 'images/main_page_signup.png' %}" alt="" class="img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <main>
+
+    <!--First container-->
+    <div class="container">
+
+      <!--Section: Features v.1-->
+      <section id="features" class="mb-5">
+
+        <!--Section heading-->
+        <h1 class="mb-3 my-5 pt-5 dark-grey-text wow fadeIn text-center" data-wow-delay="0.2s"><strong
+            class="font-weight-bold">Features of</strong> Sociafly</h1>
+          <hr>
+          <br>
+
+        <!--First row-->
+        <div class="row features wow fadeIn" data-wow-delay="0.2s">
+
+          <div class="col-lg-4 text-center">
+            <div class="icon-area">
+              <div class="circle-icon">
+                <i class="fas fa-users text-primary fa-8x fa-4x"></i>
+              </div>
+              <br>
+              <h5 class="dark-grey-text font-weight-bold mt-2">User Authentication</h5>
+              <div class="mt-1">
+                <p class="mx-3 grey-text">User can Login Logout from any device with his verified email address without worry of security issue</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 text-center">
+            <div class="icon-area">
+              <div class="circle-icon">
+                <i class="fas fa-calendar text-success  fa-4x"></i>
+              </div>
+              <br>
+              <h5 class="dark-grey-text font-weight-bold mt-2">User's Post</h5>
+              <div class="mt-1">
+                <p class="mx-3 grey-text">
+                 User Can Post him/her posts with tagging the people and sharing them with friends and can link comment , bookmark privately
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 text-center mb-4">
+            <div class="icon-area">
+              <div class="circle-icon">
+                <i class="fas fa-bell text-warning  fa-4x"></i>
+              </div>
+              <br>
+              <h5 class="dark-grey-text font-weight-bold mt-2">Notifications</h5>
+              <div class="mt-1">
+                <p class="mx-3 grey-text">
+                  You can get notification just by allowing our website for push notification you can also add our website to home screen as PWA is also supported 
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!--/First row-->
+
+      </section>
+      <!--/Section: Features v.1-->
+
+    </div>
+
+
+  </main>
+{% endblock content %}
